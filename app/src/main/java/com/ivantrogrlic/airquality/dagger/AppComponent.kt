@@ -9,6 +9,8 @@ import com.ivantrogrlic.airquality.web.OpenAqWebService
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import io.requery.Persistable
+import io.requery.reactivex.KotlinReactiveEntityStore
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -37,5 +39,7 @@ interface AppComponent {
     fun retrofit(): Retrofit
     fun okHttp(): OkHttpClient
     fun openWebService(): OpenAqWebService
+
+    fun kotlinReactiveEntityStore(): KotlinReactiveEntityStore<Persistable>
 
 }

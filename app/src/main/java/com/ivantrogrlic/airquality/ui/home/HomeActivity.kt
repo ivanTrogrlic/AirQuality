@@ -10,7 +10,6 @@ import android.view.Menu
 import com.airquallity.ivan.persistentsearch.SearchBox
 import com.airquallity.ivan.persistentsearch.SearchResult
 import com.ivantrogrlic.airquality.R
-import com.ivantrogrlic.airquality.model.Location
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -56,12 +55,9 @@ class HomeActivity : AppCompatActivity(), HasFragmentInjector, HomeView {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun citiesFound(locations: List<Location>) {
+    override fun citiesFound(locations: List<String>) {
         searchbox.clearSearchable()
-        locations.forEach {
-            val option = SearchResult(it.location + ", " + it.city + ", " + it.country, null)
-            searchbox.addSearchable(option)
-        }
+        locations.forEach { searchbox.addSearchable(SearchResult(it, null)) }
         searchbox.updateSearchResults()
     }
 
@@ -96,8 +92,7 @@ class HomeActivity : AppCompatActivity(), HasFragmentInjector, HomeView {
             }
 
             override fun onSearchTermChanged(term: String) {
-                // React to the search term changing
-                // Called after it has updated results
+
             }
 
             override fun onSearch(searchTerm: String) {
@@ -105,7 +100,7 @@ class HomeActivity : AppCompatActivity(), HasFragmentInjector, HomeView {
             }
 
             override fun onResultClick(result: SearchResult) {
-                //React to result being clicked
+                homePresenter.saveSelectedCity(result)
             }
 
             override fun onSearchCleared() {

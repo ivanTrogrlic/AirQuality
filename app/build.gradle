@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'idea'
 
 android {
     compileSdkVersion 26
@@ -19,6 +20,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+sourceSets {
+    generated {
+        "${buildDir}/generated/source/kapt/main/"
     }
 }
 
@@ -68,17 +78,30 @@ dependencies {
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
     // Search bar
-    compile ('com.github.arimorty:floatingsearchview:2.1.1') {
+    compile('com.github.arimorty:floatingsearchview:2.1.1') {
         exclude module: 'design'
         exclude module: 'recyclerview-v7'
         exclude module: 'cardview-v7'
     }
+    // Requery
+    compile 'io.requery:requery:1.4.0'
+    compile 'io.requery:requery-kotlin:1.4.0'
+    compile 'io.requery:requery-android:1.4.0'
+    kapt 'io.requery:requery-processor:1.4.0'
     // Test dependencies
     compile 'junit:junit:4.12'
     compile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(path: ':persistentsearch')
+}
+
+idea {
+    module {
+        // https://youtrack.jetbrains.com/issue/IDEA-117540
+        sourceDirs += file("${buildDir}/generated/source/kapt/main/")
+        generatedSourceDirs += "${buildDir}/generated/source/kapt/main/"
+    }
 }
 
 repositories {
